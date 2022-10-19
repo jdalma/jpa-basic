@@ -17,13 +17,14 @@ public class Main {
             Parent parent = new Parent();
             parent.addChild(child1);
             parent.addChild(child2);
-
-//            각 객체마다 영속상태로 바꿔줘야 한다.
-//            parent만 하게되면 parent만 저장되게 된다.
-//            CascadeType.ALL을 하게 되면 모두 저장된다.
             em.persist(parent);
-//            em.persist(child1);
-//            em.persist(child2);
+
+            em.flush();
+            em.clear();
+
+            Parent findParent = em.find(Parent.class, parent.getId());
+//            아래와 같이 연관관계가 끊긴 Child객체는 DELETE쿼리가 발생된다
+            findParent.getChildList().remove(0);
 
             tx.commit();
         } catch (Exception e) {
